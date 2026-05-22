@@ -4,25 +4,26 @@ https://www.zkcoi.com/365up/program/4438.html
 
 ### 使用的域名
 derp:`derp.ex.com`
+
 tailscale:`tailscale.ex.com`
 
 # 首先执行
+1. 添加网络
 ```sh
 docker network create derper_network || true
 docker network create caddy_network || true
 ```
 
-# 执行`headscale/docker-compose.yml`前需
-1.要替换`headscale/headplane-config/config.yaml`的`cookie_secret`
+2. 要替换`head/headplane-config/config.yaml`的`cookie_secret`
 ```sh
 openssl rand -hex 16
 ```
-2.先初始化`dns_records.json`在项目中的`head`文件夹中执行
+3. 先初始化`dns_records.json`。在项目中的`head`文件夹中执行
 ```sh
 mkdir -p headscale-config headscale-data headplane-config headplane-data
 echo "[]" > headscale-config/dns_records.json
 ```
-3. 生成最终配置文件
+4. 生成最终配置文件
 ```sh
 cd head
 ./generate-headscale-configs.sh
