@@ -57,7 +57,7 @@ docker exec acme --renew -d derp.ex.com \
 ```
 ⚠️ 注意：泛域名证书 必须使用 DNS 验证（HTTP 验证不支持）
 
-### 3. 复制修改证书后缀
+##### 3. 复制修改证书后缀
 ```sh
 sudo cp ../acme/certs/derp.ex.com_ecc/derp.ex.com.cer ../acme/certs/derp.ex.com_ecc/derp.ex.com.crt
 ```
