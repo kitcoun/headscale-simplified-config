@@ -1,0 +1,12 @@
+regions:
+  901:
+    regionid: 901
+    regioncode: derp
+    regionname: My DERP
+    nodes:
+      - name: 901a
+        regionid: 901
+        hostname: derp.dmsp.asia
+        derpport: 18443
+        stunport: 3478
+        stunonly: false

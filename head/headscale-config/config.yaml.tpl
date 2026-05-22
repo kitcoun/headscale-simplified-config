@@ -1,0 +1,93 @@
+server_url: https://${DHE_TAILSCALE_HOST}
+listen_addr: 0.0.0.0:8080 # 监听端口（容器端口，别搞混了）
+metrics_listen_addr: 0.0.0.0:9090 # 监控端口（容器端口，别搞混了）
+grpc_listen_addr: 0.0.0.0:50443 # CLI管理端口（容器端口，别搞混了）
+grpc_allow_insecure: false
+
+noise:
+  private_key_path: /var/lib/headscale/noise_private.key
+
+prefixes:
+  v4: 100.64.0.0/10
+  v6: fd7a:115c:a1e0::/48
+
+allocation: sequential
+
+derp:
+  server:
+    enabled: false
+    region_id: 901
+    region_code: "derp"
+    region_name: "My DERP"
+    verify_clients: true
+    stun_listen_addr: "0.0.0.0:3478"
+    private_key_path: /var/lib/headscale/derp_server_private.key
+    # ipv4: 云服务器IP       # 如：47.98.123.45（使用官方必填！）
+    # ipv6: ""                        # 无IPv6留空
+  # urls:
+    # - https://controlplane.tailscale.com/derpmap/default   # 保留官方DERP（打洞失败兜底，不耗你的流量）
+    # - https://assets.example.net/tailscale/derpmap.json  #自建
+  paths: [
+    /etc/headscale/derp.yaml,  # 自定义derp.yaml，支持多个路径，后续会合并到一起
+  ]                                                #- /etc/headscale/derp.yaml  自定义derp.yaml
+  auto_update_enabled: true
+  update_frequency: 24h
+
+disable_check_updates: false
+ephemeral_node_inactivity_timeout: 30m
+
+database:
+  type: sqlite
+  debug: false
+  gorm:
+    prepare_stmt: true
+    parameterized_queries: true
+    skip_err_record_not_found: true
+    slow_threshold: 1000
+  sqlite:
+    path: /var/lib/headscale/db.sqlite
+    write_ahead_log: true
+    wal_autocheckpoint: 1000
+
+acme_url: https://acme-v02.api.letsencrypt.org/directory
+acme_email: ""
+tls_letsencrypt_hostname: ""
+tls_letsencrypt_cache_dir: /var/lib/headscale/cache
+tls_letsencrypt_challenge_type: HTTP-01
+tls_letsencrypt_listen: ":http"
+tls_cert_path: ""
+tls_key_path: ""
+
+log:
+  level: info
+  format: text
+
+policy:
+  mode: database
+  path: ""
+
+dns:
+  magic_dns: true
+  base_domain: ${DHE_TAILNET_DOMAIN}
+  override_local_dns: true
+  nameservers:
+    global:
+      - 1.1.1.1
+      - 1.0.0.1
+      - 2606:4700:4700::1111
+      - 2606:4700:4700::1001
+  split: {}
+  search_domains: []
+  # extra_records: []
+  extra_records_path: /etc/headscale/dns_records.json
+
+unix_socket: /var/run/headscale/headscale.sock
+unix_socket_permission: "0770"
+
+logtail:
+  enabled: false
+
+randomize_client_port: false
+
+taildrop:
+  enabled: true

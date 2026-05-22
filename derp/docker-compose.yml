@@ -1,0 +1,46 @@
+services:
+  derp:
+    image: sparanoid/derp:edge
+    container_name: derp
+    restart: always
+    init: true
+    env_file:
+      - ../.env
+    ports:
+      - "18443:443"
+      - "3478:3478/udp"
+      # DERPPort 可以通过 Docker 端口映射改成非标端口
+      # STUNPort 是 UDP，需要公网直接放通
+    volumes:
+      - ${DHE_DERP_CERTS_DIR}:/app/certs:ro
+      # certdir 内建议包含：
+      # derp.example.net.crt
+      # derp.example.net.key
+
+      - /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
+      # 后续开启 -verify-clients=true 时使用
+      # 需要宿主机运行 tailscaled，并且已经加入对应 tailnet
+
+    command: sh -c "
+        derper \
+          -hostname ${DHE_DERP_HOST} \
+          -certdir /app/certs \
+          -certmode manual \
+          -verify-client-url https://${DHE_TAILSCALE_HOST}/verify
+          -verify-client-url-fail-open=false
+          -home blank"
+
+      # 方案1. 一些可选启动参数：
+      # -verify-clients true 启用客户端验证，防止DERP被偷，需要配合Tailscale使用，且需要挂载Tailscale的套接字文件
+      # -home blank 访问DERP返回空白界面，简单防止DERP服务被扫。
+      # -home https://xxx.com 访问DERP跳转指定URL
+      # 方案2. Headscale /verify 验证
+      # -verify-client-url https://tailscale.dmsp.asia/verify
+      # -verify-client-url-fail-open=false
+
+    networks:
+      - derper_network
+
+networks:
+  derper_network:
+    external: true

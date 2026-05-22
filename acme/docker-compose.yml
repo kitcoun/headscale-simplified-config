@@ -1,0 +1,8 @@
+services:
+  acme:
+    image: neilpang/acme.sh
+    container_name: acme
+    restart: always
+    command: daemon
+    volumes:
+      - ./certs:/acme.sh

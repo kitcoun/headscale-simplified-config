@@ -1,0 +1,12 @@
+{env.DHE_TAILSCALE_HOST} {
+  encode zstd gzip
+
+  @admin path /admin*
+  handle @admin {
+    reverse_proxy headplane:3000
+  }
+
+  handle {
+    reverse_proxy headscale:8080
+  }
+}
