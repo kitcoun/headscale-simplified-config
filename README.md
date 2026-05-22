@@ -37,7 +37,7 @@ cd head
 ```sh
 docker compose up -d
 ```
-1.
+##### 1. 自动
 ```sh
 docker exec acme --set-default-ca --server letsencrypt
 
@@ -46,7 +46,7 @@ docker exec acme --issue \
   -d derp.ex.com \
   --server letsencrypt
 ```
-2.手动DNS
+##### 2. 手动DNS
 ```sh
 docker exec acme --issue -d derp.ex.com --dns \
  --server letsencrypt \
@@ -57,7 +57,7 @@ docker exec acme --renew -d derp.ex.com \
 ```
 ⚠️ 注意：泛域名证书 必须使用 DNS 验证（HTTP 验证不支持）
 
-3.复制修改证书后缀
+### 3. 复制修改证书后缀
 ```sh
 sudo cp ../acme/certs/derp.ex.com_ecc/derp.ex.com.cer ../acme/certs/derp.ex.com_ecc/derp.ex.com.crt
 ```
